@@ -1,47 +1,52 @@
-# Unsupervised Wine Data Exploration
+# Wine Clustering
 
-An educational AI portfolio project prepared for Moamen Dahshan with AI assistance.
+Explore chemical measurements of wines with standardisation, KMeans and a two-dimensional PCA view. The number of clusters is selected without consulting the reference classes.
 
-## Method and limitations
+[![CI](https://github.com/moamendahshann/wine-clustering/actions/workflows/ci.yml/badge.svg)](https://github.com/moamendahshann/wine-clustering/actions/workflows/ci.yml)
 
-Explores the bundled wine chemical analysis dataset using standardisation, KMeans and PCA. The cluster count is chosen by silhouette score without using reference class labels. Adjusted Rand score is calculated afterwards for descriptive comparison. This is full dataset exploratory analysis, not held out predictive evaluation; clusters are not causal discoveries.
+![PCA view of the exploratory clusters](results/clusters.png)
 
-## Run
+## Results
 
-Python 3.11 or newer recommended. From this folder:
+| Measure | Recorded result |
+| --- | ---: |
+| Samples | 178 |
+| Selected cluster count | **3** |
+| Silhouette score at k=3 | 0.2849 |
+| Adjusted Rand index against reference classes | 0.8975 |
+
+[Full recorded metrics, including k=2 through k=6](results/metrics.json)
+
+## Method
+
+Standardise all features, fit KMeans for k=2…6 with 20 initialisations and seed 42, select the highest silhouette score, then use PCA for plotting. The reference class labels are used only afterwards for descriptive comparison via adjusted Rand index.
+
+## Run locally
+
+Python 3.11 or newer is recommended.
 
 ```bash
 python -m venv .venv
-# Activate the environment for your operating system
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+# macOS / Linux: source .venv/bin/activate
 python -m pip install -r requirements.txt
 python train.py
 ```
 
-Results and plots are written to `results/`. Random seed: 42. Dependency and platform differences can affect results. No dataset downloads or API keys are required.
+The dataset is bundled with scikit-learn; no dataset download or API key is required. Results and plots are written to `results/`. Random seed: 42. Dependency and platform differences can affect results.
 
-## Source
+## Interpretation and limitations
 
-[Official scikit learn documentation](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html)
+This is full-dataset exploratory analysis, not held-out predictive evaluation. The PCA plot is a projection of higher-dimensional features; apparent separation in two dimensions is not a complete measure of cluster quality. The clusters do not establish causal or business categories.
 
 ## Development notes
 
-Code and documentation were prepared with AI assistance. This is a new portfolio demonstration, not an earlier employment or competition achievement. Review and understand the workflow before presenting it as personal expertise.
+This is an educational portfolio project developed with AI assistance. The recorded results describe the included experiment, not a production system or a previous employment achievement.
 
-## Recorded run
+## Automated checks
 
-```json
-{
-  "samples": 178,
-  "selected_k": 3,
-  "silhouette_by_k": {
-    "2": 0.2593169555318255,
-    "3": 0.2848589191898987,
-    "4": 0.2586075384934024,
-    "5": 0.23152834284691684,
-    "6": 0.23716725754166543
-  },
-  "adjusted_rand_vs_reference": 0.8974949815093207
-}
-```
+GitHub Actions reruns the experiment and checks the generated metrics and plots. You can run the same check locally with `python scripts/verify_results.py` after training. The status badge reflects the latest workflow result; it is not a real-world quality guarantee.
 
-![clusters](results/clusters.png)
+## Source
+
+[scikit-learn wine dataset](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html)
